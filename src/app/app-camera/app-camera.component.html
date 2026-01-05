@@ -1,0 +1,15 @@
+<button (click)="takePhoto()">
+  📸 Foto machen
+</button>
+
+<div *ngIf="cameraActive" style="display:none">
+  <webcam
+    [trigger]="$trigger"
+    (imageCapture)="capture($event)">
+  </webcam>
+</div>
+
+<div *ngIf="capturedImage">
+  <h3>Letztes Foto:</h3>
+  <img [src]="capturedImage" width="300">
+</div>
