@@ -37,7 +37,7 @@ export class CameraComponent {
                 setTimeout(() => {
                     this.trigger.next();
                     this.stopCamera();
-                }, 150);
+                }, 250);
             } catch {
                 console.error('Camera permission denied');
                 return;
