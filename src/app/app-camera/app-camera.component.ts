@@ -22,7 +22,6 @@ export class CameraComponent {
     // Dauer von der Aufnahme 6 Sekunden 
     // SINGLE BUTTON LOGIC
     async takePhoto() {
-        if (this.cameraActive) return;
         // 1️⃣ Start camera
         if (!this.cameraActive) {
             try {
