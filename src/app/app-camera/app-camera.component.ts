@@ -32,7 +32,7 @@ export class CameraComponent {
         // Небольшая задержка, чтобы картинка успела стабилизироваться (фокус, свет)
         setTimeout(() => {
             this.trigger.next();
-        }, 500); 
+        }, 1000); 
     }
 
     capture(event: WebcamImage) {
