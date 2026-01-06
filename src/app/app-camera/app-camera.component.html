@@ -2,13 +2,13 @@
   📸 Foto machen
 </button>
 
-<webcam
-  *ngIf="showWebcam"
-  [trigger]="trigger$"
-  (imageCapture)="capture($event)"
-  [videoOptions]="{ facingMode: 'environment' }">
-</webcam>
-
+<div *ngIf="cameraActive" style="display:none">
+  <webcam
+    [trigger]="$trigger"
+    (imageCapture)="capture($event)">
+  </webcam>
+</div>
+<div>Hello</div>
 <div *ngIf="capturedImage">
   <h3>Letztes Foto:</h3>
   <img [src]="capturedImage" width="300">
