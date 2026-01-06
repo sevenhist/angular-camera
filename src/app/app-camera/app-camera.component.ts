@@ -36,11 +36,9 @@ export class CameraComponent {
                 this.cameraActive = true;
                 setTimeout(() => {
                     this.trigger.next();
-                    this.stopCamera();
-                }, 350);
+                }, 150);
             } catch {
                 console.error('Camera permission denied');
-                return;
             }
         }
 
@@ -59,6 +57,8 @@ export class CameraComponent {
         this.capturedImage = event.imageAsDataUrl;
 
         console.log(this.capturedImage)
+
+        this.stopCamera();
     }
 
 
@@ -69,7 +69,7 @@ export class CameraComponent {
         if (this.camData) {
             this.camData.getTracks().forEach(track => track.stop());
             this.camData = null;
-            this.cameraActive = false;
         }
+        this.cameraActive = false;
     }
 }
