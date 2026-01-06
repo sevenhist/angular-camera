@@ -2,7 +2,7 @@
   📸 Foto machen
 </button>
 
-<div *ngIf="cameraActive" style="display:none">
+<div *ngIf="cameraActive">
   <webcam
     [trigger]="$trigger"
     (imageCapture)="capture($event)">
