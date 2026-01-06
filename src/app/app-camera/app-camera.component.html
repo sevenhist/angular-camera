@@ -1,15 +1,17 @@
-<button (click)="takePhoto()">
-  📸 Foto machen
+<button (click)="takePhoto()" [disabled]="cameraActive">
+  📸 {{ cameraActive ? 'Обработка...' : 'Сделать фото' }}
 </button>
 
-<div *ngIf="cameraActive" style="display:none">
+<div *ngIf="cameraActive" style="visibility: hidden; position: absolute; width: 1px; height: 1px;">
   <webcam
     [trigger]="$trigger"
+    [videoOptions]="{ facingMode: { exact: 'environment' } }"
+    (cameraSwitched)="handleCameraInit()"
     (imageCapture)="capture($event)">
   </webcam>
 </div>
-<div>Hello</div>
-<div *ngIf="capturedImage">
-  <h3>Letztes Foto:</h3>
-  <img [src]="capturedImage" width="300">
+
+<div *ngIf="capturedImage" style="margin-top: 20px;">
+  <h3>Результат:</h3>
+  <img [src]="capturedImage" width="300" style="border-radius: 8px;">
 </div>

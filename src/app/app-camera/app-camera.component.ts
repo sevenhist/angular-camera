@@ -10,8 +10,6 @@ import { WebcamImage, WebcamModule } from 'ngx-webcam';
     templateUrl: './app-camera.component.html',
 })
 export class CameraComponent {
-
-    camData: MediaStream | null = null;
     capturedImage: string = '';
     trigger: Subject<void> = new Subject<void>();
     cameraActive = false;
@@ -19,56 +17,30 @@ export class CameraComponent {
     get $trigger(): Observable<void> {
         return this.trigger.asObservable();
     }
-    // Dauer von der Aufnahme 6 Sekunden 
-    // SINGLE BUTTON LOGIC
+
+    // Главная и единственная функция
     async takePhoto() {
-        // 1️⃣ Start camera
-        if (!this.cameraActive) {
-            try {
-                this.camData = await navigator.mediaDevices.getUserMedia({
-                    video: {
-                        width: 500,
-                        height: 500,
-                        facingMode: { exact: "environment" } 
-                    }
-                });
-                this.cameraActive = true;
-                setTimeout(() => {
-                    this.trigger.next();
-                }, 150);
-            } catch {
-                console.error('Camera permission denied');
-            }
-        }
-
-        // // 2️⃣ Give webcam time to initialize
-        // setTimeout(() => {
-        //   this.trigger.next();
-
-        //   // 3️⃣ Stop camera after photo
-        //   this.stopCamera();
-        // }, 400);
+        if (this.cameraActive) return; // Защита от спама кликами
+        
+        this.cameraActive = true; 
+        // Теперь мы просто ждем. 
+        // Фото будет сделано автоматически, когда сработает (cameraSwitched) или (imageCapture)
     }
 
-    // Capture image
+    // Этот метод вызовется АВТОМАТИЧЕСКИ, когда камера будет готова в DOM
+    handleCameraInit() {
+        // Небольшая задержка, чтобы картинка успела стабилизироваться (фокус, свет)
+        setTimeout(() => {
+            this.trigger.next();
+        }, 500); 
+    }
+
     capture(event: WebcamImage) {
-        // мгновенно присвоить
         this.capturedImage = event.imageAsDataUrl;
-
-        console.log(this.capturedImage)
-
         this.stopCamera();
     }
 
-
-
-
-    // Stop camera
     stopCamera() {
-        if (this.camData) {
-            this.camData.getTracks().forEach(track => track.stop());
-            this.camData = null;
-        }
         this.cameraActive = false;
     }
 }
