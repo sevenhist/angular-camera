@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Observable, Subject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 import { WebcamImage, WebcamModule } from 'ngx-webcam';
 
 @Component({
@@ -11,65 +11,29 @@ import { WebcamImage, WebcamModule } from 'ngx-webcam';
 })
 export class CameraComponent {
 
-    camData: MediaStream | null = null;
-    capturedImage: string = '';
-    trigger: Subject<void> = new Subject<void>();
-    cameraActive = false;
+    capturedImage = '';
+    private trigger = new Subject<void>();
+    showWebcam = false;
 
-    get $trigger(): Observable<void> {
+    get trigger$(): Observable<void> {
         return this.trigger.asObservable();
     }
-    // Dauer von der Aufnahme 6 Sekunden 
-    // SINGLE BUTTON LOGIC
-    async takePhoto() {
-        if (this.cameraActive) return;
-        // 1️⃣ Start camera
-        if (!this.cameraActive) {
-            try {
-                this.camData = await navigator.mediaDevices.getUserMedia({
-                    video: {
-                        width: 500,
-                        height: 500,
-                        facingMode: { exact: "environment" } 
-                    }
-                });
-                this.cameraActive = true;
-                setTimeout(() => {
-                    this.trigger.next();
-                }, 200);
-            } catch {
-                console.error('Camera permission denied');
-            }
-        }
 
-        // // 2️⃣ Give webcam time to initialize
-        // setTimeout(() => {
-        //   this.trigger.next();
+    takePhoto() {
+        // 1️⃣ показать webcam
+        this.showWebcam = true;
 
-        //   // 3️⃣ Stop camera after photo
-        //   this.stopCamera();
-        // }, 400);
+        // 2️⃣ дождаться, пока Angular отрендерит <webcam>
+        setTimeout(() => {
+            this.trigger.next();
+        }, 0);
     }
 
-    // Capture image
     capture(event: WebcamImage) {
-        // мгновенно присвоить
         this.capturedImage = event.imageAsDataUrl;
+        console.log('Фото сделано');
 
-        console.log(this.capturedImage)
-
-        this.stopCamera();
-    }
-
-
-
-
-    // Stop camera
-    stopCamera() {
-        if (this.camData) {
-            this.camData.getTracks().forEach(track => track.stop());
-            this.camData = null;
-        }
-        this.cameraActive = false;
+        // 3️⃣ выключить камеру
+        this.showWebcam = false;
     }
 }
